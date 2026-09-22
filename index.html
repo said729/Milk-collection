@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>جامع الحليب</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F6F3EC;
+    --surface:#FFFFFF;
+    --ink:#262B22;
+    --ink-soft:#69705F;
+    --forest:#2C4A3B;
+    --forest-dark:#1E332A;
+    --forest-light:#3F6650;
+    --amber:#B9873A;
+    --amber-soft:#F1E3C8;
+    --line:#E1DCC9;
+    --red:#A6432F;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Tajawal',sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    min-height:100vh;
+  }
+  #app{min-height:100vh;display:flex;flex-direction:column;}
+
+  /* ---------- شاشة الدخول ---------- */
+  .login-wrap{
+    flex:1;display:flex;align-items:center;justify-content:center;padding:24px;
+  }
+  .login-card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    width:100%;max-width:360px;
+    padding:32px 28px;
+    text-align:center;
+  }
+  .drop{width:46px;height:46px;margin:0 auto 14px;}
+  .login-card h1{font-size:22px;font-weight:900;margin:0 0 4px;color:var(--forest-dark);}
+  .login-card p.sub{color:var(--ink-soft);font-size:14px;margin:0 0 22px;}
+  .field{text-align:right;margin-bottom:14px;}
+  .field label{display:block;font-size:13px;color:var(--ink-soft);margin-bottom:6px;}
+  .field input, .field select{
+    width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:8px;
+    font-family:'Tajawal',sans-serif;font-size:15px;background:#fff;color:var(--ink);
+  }
+  .field input:focus, .field select:focus{outline:2px solid var(--forest-light);outline-offset:1px;}
+  .btn{
+    display:inline-block;border:none;border-radius:8px;padding:12px 18px;
+    font-family:'Tajawal',sans-serif;font-weight:700;font-size:15px;cursor:pointer;
+    background:var(--forest);color:#fff;width:100%;
+  }
+  .btn:hover{background:var(--forest-dark);}
+  .btn.secondary{background:transparent;color:var(--forest);border:1px solid var(--forest);}
+  .btn.secondary:hover{background:var(--amber-soft);}
+  .btn.small{width:auto;padding:8px 14px;font-size:13px;}
+  .btn.danger{background:var(--red);}
+  .btn.danger:hover{background:#832F1E;}
+  .err{color:var(--red);font-size:13px;margin:-6px 0 14px;text-align:right;}
+  .hint{color:var(--ink-soft);font-size:12px;margin-top:16px;}
+
+  /* ---------- الهيدر ---------- */
+  header.top{
+    background:var(--forest-dark);color:#fff;
+    padding:14px 20px;display:flex;align-items:center;justify-content:space-between;
+    flex-wrap:wrap;gap:10px;
+  }
+  header.top .brand{display:flex;align-items:center;gap:10px;}
+  header.top .brand .drop{width:26px;height:26px;}
+  header.top .brand span{font-weight:900;font-size:17px;}
+  header.top .who{display:flex;align-items:center;gap:12px;font-size:13px;color:#E8E4D6;}
+  header.top .who b{color:#fff;}
+
+  main{flex:1;padding:18px;max-width:760px;margin:0 auto;width:100%;}
+
+  /* ---------- تبويبات ---------- */
+  .tabs{display:flex;gap:6px;margin-bottom:18px;border-bottom:1px solid var(--line);}
+  .tab{
+    padding:10px 16px;font-size:14px;font-weight:700;color:var(--ink-soft);
+    cursor:pointer;border-bottom:2px solid transparent;background:none;border-top:none;border-right:none;border-left:none;
+    font-family:'Tajawal',sans-serif;
+  }
+  .tab.active{color:var(--forest-dark);border-bottom-color:var(--amber);}
+
+  .card{
+    background:var(--surface);border:1px solid var(--line);border-radius:12px;
+    padding:18px;margin-bottom:16px;
+  }
+  .card h2{margin:0 0 14px;font-size:16px;font-weight:700;color:var(--forest-dark);}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;}
+  .row .field{flex:1;min-width:120px;margin-bottom:0;}
+
+  table{width:100%;border-collapse:collapse;font-size:14px;}
+  th,td{text-align:right;padding:9px 8px;border-bottom:1px solid var(--line);}
+  th{color:var(--ink-soft);font-weight:700;font-size:12px;}
+  tr:last-child td{border-bottom:none;}
+  .empty{color:var(--ink-soft);font-size:14px;padding:10px 2px;}
+
+  .list-item{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:10px 4px;border-bottom:1px solid var(--line);
+  }
+  .list-item:last-child{border-bottom:none;}
+  .list-item .name{font-weight:700;}
+  .list-item .meta{color:var(--ink-soft);font-size:12px;}
+
+  .hero{
+    background:var(--forest);color:#fff;border-radius:14px;padding:26px 22px;margin-bottom:16px;
+    display:flex;flex-direction:column;gap:4px;
+  }
+  .hero .label{font-size:13px;color:#DCE7DF;}
+  .hero .value{font-size:40px;font-weight:900;}
+  .hero .value span{font-size:16px;font-weight:500;margin-right:6px;}
+
+  .badge{
+    display:inline-block;background:var(--amber-soft);color:#7A5A20;
+    border-radius:6px;padding:2px 8px;font-size:12px;font-weight:700;
+  }
+  .loading{text-align:center;color:var(--ink-soft);padding:30px;}
+  @media(max-width:480px){
+    .hero .value{font-size:32px;}
+  }
+</style>
+</head>
+<body>
+<div id="app"><div class="loading">جارٍ التحميل...</div></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+import {
+  getFirestore, collection, doc, getDoc, getDocs,
+  setDoc, updateDoc, deleteDoc, addDoc
+} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+/* ============ إعدادات Firebase ============ */
+const firebaseConfig = {
+  apiKey: "AIzaSyAFibwcHBzep9piJ8F7LWvgJRUuqvwnUt4",
+  authDomain: "milk-collection-76a97.firebaseapp.com",
+  projectId: "milk-collection-76a97",
+  storageBucket: "milk-collection-76a97.firebasestorage.app",
+  messagingSenderId: "544302828348",
+  appId: "1:544302828348:web:eed59200f1846bb166ac39"
+};
+const fbApp = initializeApp(firebaseConfig);
+const db = getFirestore(fbApp);
+
+/* ============ تخزين البيانات (مشترك بين جميع المستخدمين عبر Firestore) ============ */
+async function loadUsers(){
+  try{
+    const snap = await getDocs(collection(db,'users'));
+    return snap.docs.map(d=>({username:d.id, ...d.data()}));
+  }catch(e){ console.error(e); alert('خطأ فتحميل المستخدمين، تأكد من الاتصال بالنت'); return []; }
+}
+async function createUserDoc(user){
+  const {username, ...data} = user;
+  try{ await setDoc(doc(db,'users',username), data); }
+  catch(e){ console.error(e); alert('خطأ فالتخزين، عاود جرب'); }
+}
+async function updateUserDoc(username, data){
+  try{ await updateDoc(doc(db,'users',username), data); }
+  catch(e){ console.error(e); alert('خطأ فالتخزين، عاود جرب'); }
+}
+async function deleteUserDoc(username){
+  try{ await deleteDoc(doc(db,'users',username)); }
+  catch(e){ console.error(e); alert('خطأ فالحذف، عاود جرب'); }
+}
+async function loadEntries(){
+  try{
+    const snap = await getDocs(collection(db,'entries'));
+    return snap.docs.map(d=>({id:d.id, ...d.data()}));
+  }catch(e){ console.error(e); alert('خطأ فتحميل السجلات، تأكد من الاتصال بالنت'); return []; }
+}
+async function createEntryDoc(entry){
+  try{
+    const ref = await addDoc(collection(db,'entries'), entry);
+    return ref.id;
+  }catch(e){ console.error(e); alert('خطأ فالتخزين، عاود جرب'); return null; }
+}
+
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function fmtDate(s){
+  const [y,m,d] = s.split('-');
+  return d+'/'+m+'/'+y;
+}
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+
+/* ---------- البصمة (WebAuthn) ---------- */
+function randomChallenge(){
+  const arr = new Uint8Array(32);
+  crypto.getRandomValues(arr);
+  return arr;
+}
+function bufToBase64(buf){
+  const bytes = new Uint8Array(buf);
+  let binary = '';
+  for(let i=0;i<bytes.byteLength;i++) binary += String.fromCharCode(bytes[i]);
+  return btoa(binary);
+}
+function base64ToBuf(b64){
+  const binary = atob(b64);
+  const bytes = new Uint8Array(binary.length);
+  for(let i=0;i<binary.length;i++) bytes[i] = binary.charCodeAt(i);
+  return bytes.buffer;
+}
+
+async function registerFingerprint(){
+  if(!window.PublicKeyCredential){
+    alert('البصمة ماخدامة فهاد المتصفح ولا الجهاز');
+    return;
+  }
+  try{
+    const challenge = randomChallenge();
+    const userIdBytes = new TextEncoder().encode(state.currentUser.username);
+    const cred = await navigator.credentials.create({
+      publicKey:{
+        challenge,
+        rp: { name: 'جامع الحليب' },
+        user: { id: userIdBytes, name: state.currentUser.username, displayName: state.currentUser.name },
+        pubKeyCredParams: [{type:'public-key', alg:-7}, {type:'public-key', alg:-257}],
+        authenticatorSelection: { authenticatorAttachment:'platform', userVerification:'required' },
+        timeout: 60000
+      }
+    });
+    if(!cred) throw new Error('cancelled');
+    state.currentUser.credentialId = bufToBase64(cred.rawId);
+    await updateUserDoc(state.currentUser.username, {credentialId: state.currentUser.credentialId});
+    alert('توفعلات البصمة بنجاح لهاد الجهاز');
+    render();
+  }catch(e){
+    alert('ماقدرناش نفعلو البصمة فهاد الجهاز: ' + (e.message || 'خطأ غير معروف'));
+  }
+}
+
+async function loginWithFingerprint(){
+  const username = document.getElementById('in-user').value.trim();
+  if(!username){
+    state.err = 'دخل اسم المستخدم فوق، من بعد اضغط دخول بالبصمة';
+    render(); return;
+  }
+  const user = state.users.find(u=>u.username===username);
+  if(!user || !user.credentialId){
+    state.err = 'هاد الحساب مازال ما فعلش البصمة، دخل بكلمة السر أولا وفعّلها من الداخل';
+    render(); return;
+  }
+  if(!window.PublicKeyCredential){
+    state.err = 'البصمة ماخدامش فهاد المتصفح ولا الجهاز';
+    render(); return;
+  }
+  try{
+    const challenge = randomChallenge();
+    const cred = await navigator.credentials.get({
+      publicKey:{
+        challenge,
+        allowCredentials: [{ id: base64ToBuf(user.credentialId), type:'public-key' }],
+        userVerification:'required',
+        timeout: 60000
+      }
+    });
+    if(!cred) throw new Error('cancelled');
+    state.err = '';
+    state.currentUser = user;
+    render();
+  }catch(e){
+    state.err = 'ماقدرناش نتأكدو من البصمة، جرب بكلمة السر';
+    render();
+  }
+}
+
+function fingerprintBanner(){
+  if(state.currentUser.credentialId) return '';
+  return `
+  <div class="card" style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+    <div>
+      <div style="font-weight:700;">فعّل الدخول بالبصمة</div>
+      <div class="meta">باش تدخل بسرعة فهاد الجهاز من غير ما تكتب كلمة السر فالمرة الجاية</div>
+    </div>
+    <button class="btn small" id="btn-register-fp">تفعيل</button>
+  </div>`;
+}
+
+const dropSvg = `<svg class="drop" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 2C12 2 5 11.2 5 15.5C5 19.6 8.13 23 12 23C15.87 23 19 19.6 19 15.5C19 11.2 12 2 12 2Z" fill="currentColor"/>
+</svg>`;
+
+/* ============ الحالة ============ */
+let state = {
+  users: [],
+  entries: [],
+  currentUser: null,
+  adminTab: 'farmers',
+  err: ''
+};
+
+const app = document.getElementById('app');
+
+/* ============ بداية التشغيل ============ */
+async function init(){
+  state.users = await loadUsers();
+  if(state.users.length === 0){
+    const admin = {username:'admin', password:'admin123', name:'المدير', role:'admin'};
+    await createUserDoc(admin);
+    state.users = [admin];
+  }
+  state.entries = await loadEntries();
+  render();
+}
+init();
+
+/* ============ العرض ============ */
+function render(){
+  if(!state.currentUser){ renderLogin(); return; }
+  if(state.currentUser.role === 'admin'){ renderAdmin(); return; }
+  if(state.currentUser.role === 'worker'){ renderWorker(); return; }
+  if(state.currentUser.role === 'farmer'){ renderFarmer(); return; }
+}
+
+function renderLogin(){
+  app.innerHTML = `
+  <div class="login-wrap">
+    <div class="login-card">
+      <div style="color:var(--forest)">${dropSvg}</div>
+      <h1>جامع الحليب</h1>
+      <p class="sub">دخول الأدمين، العامل، ولا الفلاح</p>
+      <div class="field">
+        <label>اسم المستخدم</label>
+        <input id="in-user" type="text" autocomplete="username">
+      </div>
+      <div class="field">
+        <label>كلمة السر</label>
+        <input id="in-pass" type="password" autocomplete="current-password">
+      </div>
+      ${state.err ? `<div class="err">${state.err}</div>` : ''}
+      <button class="btn" id="btn-login">دخول</button>
+      <button class="btn secondary" id="btn-fp-login" style="margin-top:10px;">دخول بالبصمة</button>
+    </div>
+  </div>`;
+  document.getElementById('btn-login').onclick = doLogin;
+  document.getElementById('btn-fp-login').onclick = loginWithFingerprint;
+  document.getElementById('in-pass').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+}
+
+function doLogin(){
+  const u = document.getElementById('in-user').value.trim();
+  const p = document.getElementById('in-pass').value;
+  const found = state.users.find(x => x.username === u && x.password === p);
+  if(!found){
+    state.err = 'اسم المستخدم ولا كلمة السر خاطئين';
+    render();
+    return;
+  }
+  state.err = '';
+  state.currentUser = found;
+  render();
+}
+
+function logout(){
+  state.currentUser = null;
+  render();
+}
+
+function header(title){
+  return `
+  <header class="top">
+    <div class="brand">${dropSvg}<span>جامع الحليب</span></div>
+    <div class="who">
+      <span><b>${state.currentUser.name}</b> — ${title}</span>
+      <button class="btn small secondary" id="btn-logout" style="background:transparent;color:#fff;border-color:#fff;">خروج</button>
+    </div>
+  </header>`;
+}
+
+/* ============ لوحة الأدمين ============ */
+function renderAdmin(){
+  const farmers = state.users.filter(u=>u.role==='farmer');
+  const workers = state.users.filter(u=>u.role==='worker');
+
+  app.innerHTML = `
+  ${header('الأدمين')}
+  <main>
+    ${fingerprintBanner()}
+    <div class="tabs">
+      <button class="tab ${state.adminTab==='farmers'?'active':''}" data-tab="farmers">الفلاحون</button>
+      <button class="tab ${state.adminTab==='workers'?'active':''}" data-tab="workers">العمال</button>
+      <button class="tab ${state.adminTab==='records'?'active':''}" data-tab="records">السجلات</button>
+    </div>
+    <div id="tab-body"></div>
+  </main>`;
+
+  document.getElementById('btn-logout').onclick = logout;
+  const fpBtn0 = document.getElementById('btn-register-fp');
+  if(fpBtn0) fpBtn0.onclick = registerFingerprint;
+  document.querySelectorAll('.tab').forEach(b=>{
+    b.onclick = ()=>{ state.adminTab = b.dataset.tab; render(); };
+  });
+
+  const body = document.getElementById('tab-body');
+  if(state.adminTab === 'farmers') body.innerHTML = adminUserTab('farmer', farmers, 'فلاح');
+  if(state.adminTab === 'workers') body.innerHTML = adminUserTab('worker', workers, 'عامل');
+  if(state.adminTab === 'records') body.innerHTML = adminRecordsTab(farmers);
+
+  if(state.adminTab === 'farmers' || state.adminTab === 'workers'){
+    const role = state.adminTab === 'farmers' ? 'farmer' : 'worker';
+    document.getElementById('btn-add-'+role).onclick = ()=> addUser(role);
+    document.querySelectorAll('.btn-del-user').forEach(b=>{
+      b.onclick = ()=> deleteUser(b.dataset.username);
+    });
+  }
+  if(state.adminTab === 'farmers'){
+    document.querySelectorAll('.btn-save-price').forEach(b=>{
+      b.onclick = ()=> savePriceForFarmer(b.dataset.username);
+    });
+  }
+  if(state.adminTab === 'records'){
+    const sel = document.getElementById('rec-farmer-filter');
+    if(sel) sel.onchange = ()=>{ state.recordsFilter = sel.value; render(); };
+  }
+}
+
+function adminUserTab(role, list, label){
+  return `
+  <div class="card">
+    <h2>إضافة ${label} جديد</h2>
+    <div class="row">
+      <div class="field"><label>الاسم الكامل</label><input id="new-name" type="text"></div>
+      <div class="field"><label>اسم المستخدم</label><input id="new-username" type="text"></div>
+      <div class="field"><label>كلمة السر</label><input id="new-password" type="text"></div>
+      ${role === 'farmer' ? `<div class="field"><label>السعر (درهم/لتر)</label><input id="new-price" type="number" min="0" step="0.1"></div>` : ''}
+    </div>
+    ${state.userErr ? `<div class="err">${state.userErr}</div>` : ''}
+    <div style="margin-top:12px;"><button class="btn" id="btn-add-${role}">إضافة ${label}</button></div>
+  </div>
+  <div class="card">
+    <h2>لائحة ${label === 'فلاح' ? 'الفلاحين' : 'العمال'} (${list.length})</h2>
+    ${list.length === 0 ? `<div class="empty">مازال ما تزادش حد</div>` :
+      list.map(u => `
+        <div class="list-item">
+          <div>
+            <div class="name">${u.name}</div>
+            <div class="meta">اسم المستخدم: ${u.username}</div>
+            ${role === 'farmer' ? `
+            <div class="meta" style="margin-top:6px;display:flex;align-items:center;gap:6px;">
+              السعر:
+              <input type="number" min="0" step="0.1" value="${u.price || 0}" data-username="${u.username}" class="in-price-edit" style="width:70px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;">
+              درهم/لتر
+              <button class="btn small secondary btn-save-price" data-username="${u.username}">حفظ</button>
+            </div>` : ''}
+          </div>
+          <button class="btn small danger btn-del-user" data-username="${u.username}">حذف</button>
+        </div>`).join('')}
+  </div>`;
+}
+
+async function addUser(role){
+  const name = document.getElementById('new-name').value.trim();
+  const username = document.getElementById('new-username').value.trim();
+  const password = document.getElementById('new-password').value.trim();
+  if(!name || !username || !password){
+    state.userErr = 'عمر جميع الخانات';
+    render(); return;
+  }
+  if(state.users.find(u=>u.username===username)){
+    state.userErr = 'اسم المستخدم هذا مستعمل من قبل';
+    render(); return;
+  }
+  state.userErr = '';
+  const newUser = {username, password, name, role};
+  if(role === 'farmer'){
+    const priceEl = document.getElementById('new-price');
+    const price = priceEl ? parseFloat(priceEl.value) : 0;
+    newUser.price = isNaN(price) ? 0 : price;
+  }
+  state.users.push(newUser);
+  await createUserDoc(newUser);
+  render();
+}
+
+async function savePriceForFarmer(username){
+  const input = document.querySelector(`.in-price-edit[data-username="${username}"]`);
+  const val = parseFloat(input.value);
+  if(isNaN(val) || val < 0){ alert('دخل رقم صحيح'); return; }
+  const farmer = state.users.find(u=>u.username===username);
+  farmer.price = val;
+  await updateUserDoc(username, {price: val});
+  render();
+}
+
+async function deleteUser(username){
+  if(!confirm('واخا تحيد هاد الحساب؟')) return;
+  state.users = state.users.filter(u=>u.username!==username);
+  await deleteUserDoc(username);
+  render();
+}
+
+function adminRecordsTab(farmers){
+  const filter = state.recordsFilter || 'all';
+  let entries = [...state.entries].sort((a,b)=> b.date.localeCompare(a.date) || b.time.localeCompare(a.time));
+  if(filter !== 'all') entries = entries.filter(e=>e.farmerUsername===filter);
+
+  return `
+  <div class="card">
+    <h2>كل السجلات (${entries.length})</h2>
+    <div class="field" style="margin-bottom:14px;">
+      <label>فلترة حسب الفلاح</label>
+      <select id="rec-farmer-filter">
+        <option value="all" ${filter==='all'?'selected':''}>الجميع</option>
+        ${farmers.map(f=>`<option value="${f.username}" ${filter===f.username?'selected':''}>${f.name}</option>`).join('')}
+      </select>
+    </div>
+    ${entries.length === 0 ? `<div class="empty">مازال ماكاين حتى تسجيل</div>` : `
+    <table>
+      <thead><tr><th>التاريخ</th><th>الفلاح</th><th>العامل</th><th>الكمية (لتر)</th><th>القيمة (درهم)</th></tr></thead>
+      <tbody>
+        ${entries.map(e=>{
+          const farmer = state.users.find(u=>u.username===e.farmerUsername);
+          const price = farmer ? (farmer.price||0) : 0;
+          return `
+          <tr>
+            <td>${fmtDate(e.date)}</td>
+            <td>${e.farmerName}</td>
+            <td>${e.workerName}</td>
+            <td><b>${e.liters}</b></td>
+            <td>${(e.liters*price).toFixed(2)}</td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>`}
+  </div>`;
+}
+
+/* ============ لوحة العامل ============ */
+function renderWorker(){
+  const farmers = state.users.filter(u=>u.role==='farmer');
+  const today = todayStr();
+  const todaysMine = state.entries
+    .filter(e=>e.workerUsername===state.currentUser.username && e.date===today)
+    .sort((a,b)=> b.time.localeCompare(a.time));
+
+  app.innerHTML = `
+  ${header('العامل')}
+  <main>
+    ${fingerprintBanner()}
+    <div class="card">
+      <h2>تسجيل حليب اليوم — ${fmtDate(today)}</h2>
+      ${farmers.length === 0 ? `<div class="empty">ماكاين حتى فلاح مسجل، تواصل مع الأدمين باش يزيد الفلاحين</div>` : `
+      <div class="row">
+        <div class="field">
+          <label>الفلاح</label>
+          <select id="w-farmer">
+            ${farmers.map(f=>`<option value="${f.username}">${f.name}</option>`).join('')}
+          </select>
+        </div>
+        <div class="field">
+          <label>الكمية (لتر)</label>
+          <input id="w-liters" type="number" min="0" step="0.5" placeholder="مثلا 12.5">
+        </div>
+      </div>
+      ${state.workerErr ? `<div class="err" style="margin-top:10px;">${state.workerErr}</div>` : ''}
+      <div style="margin-top:12px;"><button class="btn" id="btn-add-entry">تسجيل</button></div>
+      `}
+    </div>
+    <div class="card">
+      <h2>الإضافات ديالك اليوم (${todaysMine.length})</h2>
+      ${todaysMine.length === 0 ? `<div class="empty">مازال ما سجلتي حتى شي حاجة اليوم</div>` :
+        todaysMine.map(e=>`
+          <div class="list-item">
+            <div>
+              <div class="name">${e.farmerName}</div>
+              <div class="meta">${e.time}</div>
+            </div>
+            <span class="badge">${e.liters} لتر</span>
+          </div>`).join('')}
+    </div>
+  </main>`;
+
+  document.getElementById('btn-logout').onclick = logout;
+  const fpBtnW = document.getElementById('btn-register-fp');
+  if(fpBtnW) fpBtnW.onclick = registerFingerprint;
+  if(farmers.length > 0){
+    document.getElementById('btn-add-entry').onclick = addEntry;
+  }
+}
+
+async function addEntry(){
+  const farmerUsername = document.getElementById('w-farmer').value;
+  const liters = parseFloat(document.getElementById('w-liters').value);
+  if(!farmerUsername || isNaN(liters) || liters <= 0){
+    state.workerErr = 'دخل كمية صحيحة';
+    render(); return;
+  }
+  state.workerErr = '';
+  const farmer = state.users.find(u=>u.username===farmerUsername);
+  const now = new Date();
+  const entryData = {
+    farmerUsername,
+    farmerName: farmer.name,
+    workerUsername: state.currentUser.username,
+    workerName: state.currentUser.name,
+    date: todayStr(),
+    time: String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0'),
+    liters
+  };
+  const id = await createEntryDoc(entryData);
+  state.entries.push({ id: id || uid(), ...entryData });
+  render();
+}
+
+/* ============ لوحة الفلاح ============ */
+function renderFarmer(){
+  const mine = state.entries.filter(e=>e.farmerUsername===state.currentUser.username);
+  const today = todayStr();
+  const todayTotal = mine.filter(e=>e.date===today).reduce((s,e)=>s+e.liters,0);
+  const myPrice = state.currentUser.price || 0;
+
+  const byDate = {};
+  mine.forEach(e=>{ byDate[e.date] = (byDate[e.date]||0) + e.liters; });
+  const dates = Object.keys(byDate).sort().reverse();
+
+  app.innerHTML = `
+  ${header('الفلاح')}
+  <main>
+    ${fingerprintBanner()}
+    <div class="hero">
+      <span class="label">الحليب ديالك اليوم — ${fmtDate(today)}</span>
+      <span class="value">${todayTotal}<span>لتر</span></span>
+      ${myPrice ? `<span class="label" style="margin-top:6px;">= ${(todayTotal*myPrice).toFixed(2)} درهم (السعر ديالك: ${myPrice} درهم/لتر)</span>` : ''}
+    </div>
+    <div class="card">
+      <h2>السجل حسب اليوم</h2>
+      ${dates.length === 0 ? `<div class="empty">مازال ماكاين حتى تسجيل ديالك</div>` : `
+      <table>
+        <thead><tr><th>التاريخ</th><th>المجموع (لتر)</th><th>القيمة (درهم)</th></tr></thead>
+        <tbody>
+          ${dates.map(d=>`<tr><td>${fmtDate(d)}</td><td><b>${byDate[d]}</b></td><td>${(byDate[d]*myPrice).toFixed(2)}</td></tr>`).join('')}
+        </tbody>
+      </table>`}
+    </div>
+  </main>`;
+
+  document.getElementById('btn-logout').onclick = logout;
+  const fpBtnF = document.getElementById('btn-register-fp');
+  if(fpBtnF) fpBtnF.onclick = registerFingerprint;
+}
+</script>
+</body>
+</html>
